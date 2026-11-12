@@ -1,0 +1,14 @@
+# Environment & secrets
+.env
+
+# Chrome profile cache & cookies
+cache/chrome_profile/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Output files
+# output/*.xlsx (uncomment if you want to keep output private)
