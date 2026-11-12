@@ -11,6 +11,32 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 # Excel Output
 EXCEL_OUTPUT_PATH = OUTPUT_DIR / "india_leads.xlsx"
 
+# Load .env file automatically
+env_file = BASE_DIR / ".env"
+if env_file.exists():
+    try:
+        with open(env_file, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip().strip("'\"")
+                    if k and k not in os.environ:
+                        os.environ[k] = v
+    except Exception:
+        pass
+
+# Also load from Streamlit Cloud Secrets if running in cloud
+try:
+    import streamlit as st
+    if hasattr(st, "secrets"):
+        for k, v in st.secrets.items():
+            if isinstance(v, (str, int, float)) and str(k) not in os.environ:
+                os.environ[str(k)] = str(v)
+except Exception:
+    pass
+
 # State & Cache Files
 SEEN_LEADS_PATH = CACHE_DIR / "seen_leads.json"
 DAILY_QUOTA_PATH = CACHE_DIR / "quota_usage.json"
